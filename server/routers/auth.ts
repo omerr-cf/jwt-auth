@@ -3,9 +3,10 @@ import type { Request, Response } from "express";
 import { SignupRequest, LoginRequest } from "../../shared/types";
 import { users } from "../constans";
 import bcrypt from "bcrypt";
-import { DbUser } from "../types";
+import { DbUser, AuthRequest } from "../types";
 import { randomUUID } from "crypto";
 import { generateToken, mapToPublicuser } from "../utils";
+import { authMiddleware } from "../middlewares/auth";
 
 const router = Router();
 
@@ -65,6 +66,19 @@ router.post("/login", async (req: Request<LoginRequest>, res: Response) => {
   }
 });
 
-router.get("/user", async (req, res) => {});
+router.get("/user", authMiddleware, async (req: AuthRequest, res: Response) => {
+  const decoded = req.user;
+  if (!decoded) {
+    return res.status(404).json({ error: "User not found" });
+  }
+  const userId = decoded.id;
+  const user = users.find((u) => u.id === userId);
+
+  if (!user) {
+    return res.status(404).json({ error: "User not found" });
+  }
+
+  return res.status(200).json(mapToPublicuser(user));
+});
 
 export default router;

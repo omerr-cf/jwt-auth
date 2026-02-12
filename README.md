@@ -15,11 +15,13 @@ create shraed type for dto
 
 creat routers
 
-router sign up -> get user || err -> check if user already exists ->  hash password || err -> generate token -> create user -> push to users list -> return token with user || error
+router sign up -> get user || err -> check if user already exists -> hash password || err -> generate token -> create user -> push to users list -> return token with user || error
 router login -> get user || err -> find user from users || err -> validate password || error -> generate token -> retunr token with user || error
 router user -> pass middelware -> next() decoded user -> find user id with decode id -> retunr user
 
-create middelware -> get headers -> check for Bearer or headers exists || error -> verify user jwt -> decode -> req.user jwtpayload (id, emai) - next() || error
+create middelware
+
+-> get headers -> check for Bearer or headers exists || error -> get token -> verify user jwt -> decode -> req.user jwtpayload (id, emai) - next() || error
 
 create func -> generate token
 
